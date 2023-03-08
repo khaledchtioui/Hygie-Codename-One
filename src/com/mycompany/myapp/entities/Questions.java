@@ -16,6 +16,13 @@ public class Questions {
     private int point ; 
     private int id_quiz ;
 
+    public Questions(String question, int type, int point, int id_quiz) {
+        this.question = question;
+        this.type = type;
+        this.point = point;
+        this.id_quiz = id_quiz;
+    }
+
     public Questions(int id, String question, int type, int point, int id_quiz) {
         this.id = id;
         this.question = question;

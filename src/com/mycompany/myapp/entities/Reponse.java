@@ -18,6 +18,16 @@ public class Reponse {
     public Reponse() {
     }
 
+    public Reponse(String reponse, boolean type, int id_question) {
+        this.reponse = reponse;
+        this.type = type;
+        this.id_question = id_question;
+    }
+
+    public Reponse(int id, String toString) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     @Override
     public String toString() {
         return "Reponse{" + "reponse=" + reponse + ", type=" + type + '}';
@@ -56,7 +66,7 @@ public class Reponse {
     }
 
  
-    public Reponse(String reponse, int id, boolean type, int id_question) {
+    public Reponse( int id,String reponse, boolean type, int id_question) {
         this.reponse = reponse;
         this.id = id;
         this.type = type;

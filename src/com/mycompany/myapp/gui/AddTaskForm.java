@@ -30,7 +30,6 @@ public class AddTaskForm extends Form{
         setLayout(BoxLayout.y());
         
         TextField tfName = new TextField("","TaskName");
-        CheckBox cbStatus = new CheckBox("Status");
         Button btnValider = new Button("Add task");
         
         btnValider.addActionListener(new ActionListener() {
@@ -41,9 +40,7 @@ public class AddTaskForm extends Form{
                 else
                 {
                     try {
-                        int status=0;
-                        if(cbStatus.isSelected())
-                            status=1;
+                        
                         Questionnaire t = new Questionnaire(tfName.getText().toString());
                         if( ServiceTask.getInstance().addQuestionnaire(t))
                         {
@@ -60,7 +57,7 @@ public class AddTaskForm extends Form{
             }
         });
         
-        addAll(tfName,cbStatus,btnValider);
+        addAll(tfName,btnValider);
         getToolbar().addMaterialCommandToLeftBar("", FontImage.MATERIAL_ARROW_BACK, e-> previous.showBack());
                 
     }

@@ -26,7 +26,9 @@ import java.util.Map;
  * @author bhk
  */
 public class ServiceTask {
-
+   public Questionnaire quizz ;
+   public Questions questionn ; 
+   public Reponse reponsee ; 
     public ArrayList<Questionnaire> quizs   ;
   public ArrayList<Questions> questions ;  
  public ArrayList<Reponse> reponse    ;   
@@ -46,12 +48,417 @@ public class ServiceTask {
         return instance;
     }
 
-    public void suppQuestionnaire(Questionnaire t)
+    public boolean suppQuestionnaire(Questionnaire t)
     {
-        int id = t.getId() ;
+        
+         String url = Statics.BASE_URL + "questionnaire/deletejson/"+t.getId() ;
+        req.setUrl(url);
+        req.setPost(false);
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+             @Override
+             public void actionPerformed(NetworkEvent evt) {
+                resultOK = req.getResponseCode() == 200; //Code HTTP 200 OK
+                req.removeResponseListener(this);             }
+         });
+          NetworkManager.getInstance().addToQueueAndWait(req);
+        return resultOK;
+        
+        
+        
     }
-    
-    
+    //
+     public boolean suppQuestion(Questions t)
+    {
+        
+         String url = Statics.BASE_URL + "questions/deletejson/"+t.getId();
+        req.setUrl(url);
+        req.setPost(false);
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+             @Override
+             public void actionPerformed(NetworkEvent evt) {
+                resultOK = req.getResponseCode() == 200; //Code HTTP 200 OK
+                req.removeResponseListener(this);             }
+         });
+          NetworkManager.getInstance().addToQueueAndWait(req);
+        return resultOK;
+        
+        
+        
+    }
+//
+     
+     
+     //
+     public boolean suppReponse(Reponse t)
+    {
+        
+         String url = Statics.BASE_URL + "reponse/deletejson/"+t.getId() ;
+        req.setUrl(url);
+        req.setPost(false);
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+             @Override
+             public void actionPerformed(NetworkEvent evt) {
+                resultOK = req.getResponseCode() == 200; //Code HTTP 200 OK
+                req.removeResponseListener(this);             }
+         });
+          NetworkManager.getInstance().addToQueueAndWait(req);
+        return resultOK;
+        
+        
+        
+    }
+    //
+     //
+    //
+//
+     
+     //
+                 public Reponse getreponse(int id) {
+                
+                
+                
+        
+        String url = Statics.BASE_URL + "reponse/reponsejson/+"+id+"/"   ;
+        req.setUrl(url);
+        req.setPost(false);
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                reponsee = parseReponsebyid(new String(req.getResponseData()));
+
+                req.removeResponseListener(this);
+            }
+        });
+        
+        
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        
+        
+        return reponsee;
+        
+        
+    }
+
+     //
+     
+     //
+            public Questionnaire getquiz(int id) {
+                
+                
+                
+        
+        String url = Statics.BASE_URL + "questionnaire/quizIdjson/+"+id+"/"   ;
+        req.setUrl(url);
+        req.setPost(false);
+           System.out.println("test err");
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                quizz = parseQuestionnairebyid(new String(req.getResponseData()));
+
+                req.removeResponseListener(this);
+            }
+        });
+        
+        
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        
+        
+        return quizz;
+        
+        
+    }
+
+     //
+     
+       public Questions getquestion(int id) {
+        
+        String url = Statics.BASE_URL + "questions/questionidjson/+"+id+"/"   ;
+        req.setUrl(url);
+        req.setPost(false);
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                questionn = parseQuestionbyid(new String(req.getResponseData()));
+
+                req.removeResponseListener(this);
+            }
+        });
+        
+        
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        
+        
+        return questionn;
+        
+        
+    }
+       //
+       
+                public Questions parseQuestionbyid(String jsonText) {
+        try {
+           System.out.println("aloo 2 ");
+
+            questionn = new Questions();
+           System.out.println("aloo 3");
+
+            JSONParser j = new JSONParser();
+             System.out.println("aloo 4");
+
+            Map<String, Object> questionListJson = j.parseJSON(new CharArrayReader(jsonText.toCharArray()));
+            System.out.println("aloo aloo");
+                                      
+
+             
+                float id = Float.parseFloat(questionListJson.get("id").toString());
+                 System.out.println("test err id");
+
+                questionn.setId((int) id);
+
+                if (questionListJson.get("question") == null) 
+                {
+                    
+                    
+                
+                    questionn.setQuestion("null")                          ;
+
+                
+               
+                } 
+                else 
+                {
+               
+                    
+                   questionn.setQuestion(questionListJson.get("question").toString())        ;
+
+                    
+                
+                 }
+              
+                    if(questionListJson.get("type")=="1")
+                
+                    questionn.setType(1) ;   
+                    
+                    else 
+                        questionn.setType(2);
+
+                
+               
+              
+                    
+
+                    
+                
+            
+                
+                
+            
+
+        } catch (IOException ex) {
+                 System.out.println("errrrrrrrrr");
+        }
+        
+
+        
+        return questionn ;
+    } 
+
+       //
+       
+       
+      //
+     public Reponse parseReponsebyid(String jsonText) {
+        try {
+
+            reponsee = new Reponse();
+            JSONParser j = new JSONParser();
+            Map<String, Object> reponseListJson = j.parseJSON(new CharArrayReader(jsonText.toCharArray()));
+                       System.out.println(reponseListJson);
+
+
+
+
+             
+                float id = Float.parseFloat(reponseListJson.get("id").toString());
+
+                reponsee.setId((int) id);
+
+                if (reponseListJson.get("reponsee") == null) 
+                {
+                    
+                    
+                
+                    reponsee.setReponse("null")                          ;
+
+                
+               
+                } 
+                else 
+                {
+               
+                    
+                   reponsee.setReponse(reponseListJson.get("reponsee").toString())        ;
+
+                    
+                
+                 }
+                if(reponseListJson.get("type").toString().equals("true"))
+                {
+                reponsee.setType(true);
+                }
+                else
+                {
+                    reponsee.setType(false);
+                }
+                
+                
+            
+
+        } catch (IOException ex) {
+                 System.out.println("errrrrrrrrr");
+        }
+        
+
+        
+        return reponsee ;
+    } 
+
+      //
+         public Questionnaire parseQuestionnairebyid(String jsonText) {
+        try {
+                                       System.out.println("test err 2");
+
+            quizz = new Questionnaire();
+            JSONParser j = new JSONParser();
+            Map<String, Object> quizsListJson = j.parseJSON(new CharArrayReader(jsonText.toCharArray()));
+                                       System.out.println("test err 3");
+                                       System.out.println(quizsListJson);
+
+                                                   System.out.println("test err 4");
+
+
+                                     System.out.println("test err 5");
+
+             
+                float id = Float.parseFloat(quizsListJson.get("id").toString());
+                 System.out.println("test err id");
+
+                quizz.setId((int) id);
+                                          System.out.println("test err 5");
+
+                if (quizsListJson.get("nom") == null) 
+                {
+                    
+                    
+                
+                    quizz.setQuestionnaire("null")                          ;
+                   System.out.println("test err 6");
+
+                
+               
+                } 
+                else 
+                {
+               
+                    
+                   quizz.setQuestionnaire(quizsListJson.get("nom").toString())        ;
+                   System.out.println("test err 7");
+
+                    
+                
+         }
+                
+                
+            
+
+        } catch (IOException ex) {
+                 System.out.println("errrrrrrrrr");
+        }
+        
+
+        
+        return quizz ;
+    } 
+  
+       
+      //
+         
+        // 
+         public boolean uppQuestionnaire(Questionnaire t) {
+
+        String name = t.getQuestionnaire();
+        
+        //String url = Statics.BASE_URL + "create?name=" + t.getName() + "&status=" + t.getStatus();
+        String url = Statics.BASE_URL + "questionnaire/updateQuizJson/"+t.getId()+"?nom="+name ;
+
+        req.setUrl(url);
+        req.setPost(false);
+        
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                resultOK = req.getResponseCode() == 200; //Code HTTP 200 OK
+                req.removeResponseListener(this);
+            }
+        });
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return resultOK;
+    }
+         //   
+      //   
+         public boolean uppReponse(Reponse t) {
+   String type ; 
+   if (t.isType()==true)
+   {
+       type = "true";
+   }
+   else
+   {
+       type= "false";
+   }
+        String name = t.getReponse();
+        
+        //String url = Statics.BASE_URL + "create?name=" + t.getName() + "&status=" + t.getStatus();
+        String url = Statics.BASE_URL + "reponse/updatereponsejson/"+t.getId()+"?reponse="+name+"&type="+type ;
+
+        req.setUrl(url);
+        req.setPost(false);
+        
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                resultOK = req.getResponseCode() == 200; //Code HTTP 200 OK
+                req.removeResponseListener(this);
+            }
+        });
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return resultOK;
+    }
+     //
+         //
+                  public boolean uppQuestion(Questions t) {
+
+        String name = t.getQuestion();
+        
+        //String url = Statics.BASE_URL + "create?name=" + t.getName() + "&status=" + t.getStatus();
+        String url = Statics.BASE_URL + "questions/Updatequestionjson/"+t.getId()+"?question="+name+"&point="+t.getPoint()+"&type="+t.getType() ;
+
+        req.setUrl(url);
+        req.setPost(false);
+        
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                resultOK = req.getResponseCode() == 200; //Code HTTP 200 OK
+                req.removeResponseListener(this);
+            }
+        });
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return resultOK;
+    }
+
+         //
+//    
     public boolean addQuestionnaire(Questionnaire t) {
 
         String name = t.getQuestionnaire();
@@ -72,14 +479,72 @@ public class ServiceTask {
         NetworkManager.getInstance().addToQueueAndWait(req);
         return resultOK;
     }
+    
+    //
+        public boolean addReponse(Reponse t) {
+            int type ;
+        if(t.isType()==true)
+        {
+         type = 1 ;    
+        }
+        else 
+        {
+            type = 0 ; 
+        }
+        
+        //String url = Statics.BASE_URL + "create?name=" + t.getName() + "&status=" + t.getStatus();
+        String url = Statics.BASE_URL + "reponse/newjson/"+t.getId_question()+"?type="+type+"&reponse="+t.getReponse() ;
+
+        req.setUrl(url);
+        req.setPost(false);
+        
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                resultOK = req.getResponseCode() == 200; //Code HTTP 200 OK
+                req.removeResponseListener(this);
+            }
+        });
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return resultOK;
+    }
+
+    //
+    
+    //
+    public boolean addQuestion(Questions t) {
+
+        String name = t.getQuestion();
+        
+        //String url = Statics.BASE_URL + "create?name=" + t.getName() + "&status=" + t.getStatus();
+        String url = Statics.BASE_URL + "questions/newjson/"+t.getId_quiz()+"?type="+t.getType()+"&question="+t.getQuestion()+"&point="+t.getPoint() ;
+
+        req.setUrl(url);
+        req.setPost(false);
+        
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                resultOK = req.getResponseCode() == 200; //Code HTTP 200 OK
+                req.removeResponseListener(this);
+            }
+        });
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return resultOK;
+    }
+//
+    
 
     public ArrayList<Questionnaire> parseQuestionnaire(String jsonText) {
         try {
             quizs = new ArrayList<>();
             JSONParser j = new JSONParser();
             Map<String, Object> quizsListJson = j.parseJSON(new CharArrayReader(jsonText.toCharArray()));
+                                                               System.out.println(quizsListJson);
 
             List<Map<String, Object>> list = (List<Map<String, Object>>) quizsListJson.get("root");
+                                                               System.out.println(list);
+
             for (Map<String, Object> obj : list) {
                 Questionnaire t = new Questionnaire();
                 float id = Float.parseFloat(obj.get("id").toString());

@@ -20,6 +20,11 @@ public class Questionnaire {
     public Questionnaire() {
     }
 
+    public Questionnaire(int id, String questionnaire) {
+        this.id = id;
+        this.questionnaire = questionnaire;
+    }
+
     public int getId() {
         return id;
     }
